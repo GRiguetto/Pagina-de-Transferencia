@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard do Servidor - SMS Rio Preto</title>
+    <link rel="stylesheet" href="css/formulario.css">
+    <link rel="stylesheet" href="css/dashboardUserView.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="brand-area">
+            <div class="brasao-container">
+                <img src="img/Coat_of_arms_of_São_José_do_Rio_Preto_SP.png" alt="Brasão Rio Preto" class="logo-dashboard">
+            </div>
+            <span>Portal SMS</span>
+        </div>
+        <nav class="menu">
+            <a href="#" class="menu-item active" data-target="inicio">Início</a>
+            <a href="#" class="menu-item" data-target="perfil">Meu Perfil</a>
+            <a href="#" class="menu-item" data-target="faq">Dúvidas Frequentes</a>
+            <a href="index.html" class="menu-item logout">Sair</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <section id="inicio" class="content-section active">
+            <header class="section-header">
+                <h1>Painel do Servidor</h1>
+                <button class="btn-primary" onclick="window.location.href='formulario.html'">+ Nova Solicitação</button>
+            </header>
+
+            <div class="dashboard-grid">
+                <div class="card status-card">
+                    <h3>Minha Solicitação Atual</h3>
+                    <div id="pedido-info">
+                        <p class="status-badge em-analise">Em Análise</p>
+                        <div class="pedido-detalhes">
+                            <p><strong>Protocolo:</strong> #2026-001</p>
+                            <p><strong>Data do Pedido:</strong> 18/02/2026</p>
+                            <p><strong>Opção Solicitada:</strong> <span id="view-opcao1">UBS Solo Sagrado</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card rules-card">
+                    <h3>Regras de Transferência</h3>
+                    <ul class="rules-list">
+                        <li>Pedidos podem ser feitos uma vez a cada <strong>06 meses</strong>.</li>
+                        <li>A permuta exige compatibilidade de cargo e jornada.</li>
+                        <li>Após transferido, permanência mínima de <strong>01 ano</strong> na nova unidade.</li>
+                        <li>Transferências de Ofício ocorrem por interesse da Administração.</li>
+                    </ul>
+                    <a href="portaria.pdf" target="_blank" class="link-documento">Ler Portaria Completa (PDF)</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="perfil" class="content-section">
+            <header class="section-header">
+                <h1>Meu Perfil</h1>
+                <p>Mantenha seus dados sempre atualizados para facilitar o contato da secretaria.</p>
+            </header>
+            
+            <div class="card">
+                <form id="updateProfileForm">
+                    <div class="form-section-title">Dados Pessoais e Identificação</div>
+                    <div class="grid-row">
+                        <div class="form-group">
+                            <label for="edit-nome">Nome Completo</label>
+                            <input type="text" id="edit-nome" placeholder="Nome do servidor">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-matricula">Matrícula</label>
+                            <input type="text" id="edit-matricula" placeholder="000.000-0">
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="form-group">
+                            <label for="edit-email">E-mail Corporativo/Pessoal</label>
+                            <input type="email" id="edit-email" placeholder="email@exemplo.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-telefone">Telefone / WhatsApp</label>
+                            <input type="tel" id="edit-telefone" placeholder="(17) 00000-0000">
+                        </div>
+                    </div>
+
+                    <div class="form-section-title">Dados Profissionais Atuais</div>
+                    <div class="grid-row">
+                        <div class="form-group">
+                            <label for="edit-cargo">Cargo Atual</label>
+                            <select id="edit-cargo">
+                                <option value="" disabled>Selecione seu cargo...</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="vinculo">Vínculo *</label>
+                            <select id="vinculo" name="vinculo" required>
+                                <option value="" disabled selected>Selecione seu vínculo</option>
+                                <option value="Funfarme">Funfarme</option>
+                                <option value="Prefeitura">Prefeitura</option>
+                                <option value="Estadual">Estadual</option>
+                                <option value="Federal">Federal</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="form-group">
+                            <label for="edit-unidade">Unidade de Lotação Atual</label>
+                            <select id="edit-unidade">
+                                <option value="" disabled>Selecione sua unidade...</option>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-admissao">Data de Admissão</label>
+                            <input type="date" id="edit-admissao">
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+                    <div class="form-section-title">Segurança</div>
+                    <div class="grid-row">
+                        <div class="form-group">
+                            <label for="new-pass">Nova Senha</label>
+                            <input type="password" id="new-pass" placeholder="Deixe em branco para não alterar">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-new-pass">Confirmar Nova Senha</label>
+                            <input type="password" id="confirm-new-pass" placeholder="Repita a nova senha">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-secondary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section id="faq" class="content-section">
+            <header class="section-header">
+                <h1>Perguntas Frequentes</h1>
+            </header>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">Quanto tempo devo esperar para pedir nova transferência?</button>
+                    <div class="faq-answer">
+                        <p>De acordo com o Art. 3º da Portaria 02/2022, o pedido pode ser solicitado uma vez a cada 06 meses.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Como funciona a transferência por permuta?</button>
+                    <div class="faq-answer">
+                        <p>A permuta ocorre quando dois profissionais de mesmo cargo e jornada concordam com a troca, dependendo da autorização dos Departamentos envolvidos.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">O que acontece se eu for transferido de ofício?</button>
+                    <div class="faq-answer">
+                        <p>A transferência de ofício é feita por interesse da Administração para adequar a lotação à demanda, sendo sempre objetivamente justificada.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="js/dashboardUserView.js"></script>
+</body>
+</html>

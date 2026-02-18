@@ -1,0 +1,395 @@
+/* Reutilizando e estendendo as variáveis do seu projeto */
+:root {
+    --primary-blue: #003366;    /* Azul Marinho Institucional */
+    --secondary-blue: #0056b3;  /* Azul Royal */
+    --bg-light: #f4f7f9;
+    --white: #ffffff;
+    --text-dark: #333333;
+    --text-muted: #666666;
+    --border-color: #d1d9e0;
+    --success: #28a745;
+    --warning-bg: #fff3cd;
+    --warning-text: #856404;
+    --sidebar-width: 260px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* --- SIDEBAR LATERAL --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--primary-blue);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    position: fixed;
+    height: 100vh;
+    z-index: 1000;
+}
+
+.brand-area {
+    text-align: center;
+    padding-bottom: 25px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 25px;
+}
+
+.logo-dashboard {
+    max-width: 90px;
+    height: auto;
+    margin-bottom: 12px;
+}
+
+.brand-area span {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.menu-item {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    padding: 14px 18px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.menu-item:hover, .menu-item.active {
+    background-color: var(--secondary-blue);
+    color: var(--white);
+}
+
+.menu-item.logout {
+    margin-top: auto;
+    color: #ff9999;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 20px;
+}
+
+/* --- CONTEÚDO PRINCIPAL --- */
+.main-content {
+    flex: 1;
+    margin-left: var(--sidebar-width);
+    padding: 40px;
+    max-width: 1200px;
+}
+
+.section-header {
+    margin-bottom: 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.section-header h1 {
+    color: var(--primary-blue);
+    font-size: 1.8rem;
+}
+
+.content-section {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- CARDS E GRID --- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid #edf2f7;
+}
+
+.card h3 {
+    margin-bottom: 20px;
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+    border-bottom: 2px solid var(--bg-light);
+    padding-bottom: 10px;
+}
+
+/* Status e Regras */
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.em-analise {
+    background-color: var(--warning-bg);
+    color: var(--warning-text);
+}
+
+.pedido-detalhes p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+}
+
+.rules-list {
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.rules-list li {
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.rules-list li::before {
+    content: "•";
+    color: var(--secondary-blue);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.link-documento {
+    color: var(--secondary-blue);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.link-documento:hover { text-decoration: underline; }
+
+/* --- FORMULÁRIO DE PERFIL --- */
+.form-section-title {
+    background: #f8fafc;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary-blue);
+    text-transform: uppercase;
+    margin: 25px 0 15px 0;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.form-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    text-align: right;
+}
+
+.btn-secondary {
+    background-color: var(--success);
+    color: white;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* --- FAQ ACCORDION --- */
+.faq-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.faq-item {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.faq-question {
+    width: 100%;
+    padding: 18px 25px;
+    background: var(--white);
+    border: none;
+    text-align: left;
+    font-weight: 600;
+    color: var(--primary-blue);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.faq-question:hover { background: #f8fafc; }
+
+.faq-answer {
+    padding: 0 25px 20px 25px;
+    background: var(--white);
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    display: none;
+}
+
+.section-header .btn-primary {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(0, 51, 102, 0.1);
+}
+
+.section-header .btn-primary:hover {
+    background-color: var(--secondary-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 51, 102, 0.2);
+}
+
+.section-header .btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Ajuste Responsivo para o Cabeçalho */
+@media (max-width: 600px) {
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .section-header .btn-primary {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 1024px) {
+    .sidebar { width: 80px; padding: 15px 10px; }
+    .sidebar span, .brand-area span { display: none; }
+  
+    .main-content { margin-left: 80px; }
+}
+
+@media (max-width: 768px) {
+    .main-content { padding: 20px; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+/* Botão Menu Sanduíche (Oculto por padrão) */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1100;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+}
+
+.mobile-menu-toggle span {
+    width: 30px;
+    height: 3px;
+    background: var(--primary-blue);
+    border-radius: 10px;
+    transition: all 0.3s linear;
+}
+
+/* Responsividade para Tablets e Celulares */
+@media (max-width: 992px) {
+    .mobile-menu-toggle {
+        display: flex; /* Exibe o botão em telas menores */
+    }
+
+    .sidebar {
+        left: -100%; /* Esconde a sidebar para fora da tela */
+        transition: all 0.4s ease;
+        width: 260px; /* Mantém a largura real no mobile */
+    }
+
+    .sidebar.active {
+        left: 0; /* Desliza para dentro quando ativo */
+    }
+
+    .main-content {
+        margin-left: 0; /* Ocupa a tela toda */
+        padding: 60px 20px 20px 20px; /* Espaço para o botão fixo */
+    }
+
+    /* Overlay para escurecer o fundo quando o menu abrir */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+}
