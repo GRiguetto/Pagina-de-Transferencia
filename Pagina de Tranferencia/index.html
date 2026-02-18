@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Portal SMS Rio Preto</title>
+    <link rel="stylesheet" href="css/formulario.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="auth-container">
+    <div id="loginBox" class="auth-box">
+        <header class="auth-header">
+            <div class="logo-placeholder">Portal Secretaria de Saúde</div>
+            <h1>Acesso ao Sistema</h1>
+            <p>Entre com sua matrícula ou e-mail corporativo</p>
+        </header>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="login_user">Matrícula ou E-mail *</label>
+                <input type="text" id="login_user" placeholder="Digite seu acesso" required>
+            </div>
+            <div class="form-group">
+                <label for="login_pass">Senha *</label>
+                <input type="password" id="login_pass" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn-primary">Entrar</button>
+        </form>
+        
+        <footer class="auth-footer">
+            <p>Não tem uma conta? <a href="#" id="showRegister">Cadastre-se aqui</a></p>
+        </footer>
+    </div>
+
+    <div id="registerBox" class="auth-box" style="display: none;">
+        <header class="auth-header">
+            <h1>Criar Conta</h1>
+            <p>Preencha seus dados de servidor para o primeiro acesso</p>
+        </header>
+
+        <form id="registerForm">
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="reg_nome">Nome Completo *</label>
+                    <input type="text" id="reg_nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg_matricula">Matrícula *</label>
+                    <input type="text" id="reg_matricula" placeholder="000.000-0" required>
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="reg_email">E-mail *</label>
+                    <input type="email" id="reg_email" placeholder="nome@riopreto.sp.gov.br" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg_unidade">Unidade Atual *</label>
+                    <select id="reg_unidade" required>
+                        <option value="">Selecione sua unidade...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="reg_pass">Criar Senha *</label>
+                    <input type="password" id="reg_pass" required>
+                </div>
+                <div class="form-group">
+                    <label for="reg_pass_confirm">Confirmar Senha *</label>
+                    <input type="password" id="reg_pass_confirm" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Finalizar Cadastro</button>
+        </form>
+
+        <footer class="auth-footer">
+            <p>Já possui conta? <a href="#" id="showLogin">Voltar para o Login</a></p>
+        </footer>
+    </div>
+</div>
+
+<script src="js/login.js"></script>
+</body>
+</html>

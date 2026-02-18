@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitação de Transferência - SMS Rio Preto</title>
+    <link rel="stylesheet" href="css/formulario.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <header class="form-header">
+        <div class="logo-area">
+            <div class="logo-placeholder">Portal Secretaria de Saúde</div>
+        </div>
+        <h1>Solicitação de Transferência</h1>
+        <p class="subtitle">Gestão de Pessoas - Secretaria Municipal de Saúde (SMS)</p>
+    </header>
+
+    <div class="info-alert">
+        Este formulário é destinado a servidores da SMS para registro de interesse em remanejamento. 
+        A solicitação não garante a transferência automática.
+        <a href="portaria.pdf" target="_blank"> clique aqui para acessar as regras de transferência</a> 
+    </div>
+
+    <form id="transferForm">
+        <section class="form-section">
+            <div class="section-title">
+                <span>1</span>
+                <h2>Dados Pessoais</h2>
+            </div>
+            
+            <div class="grid-row">
+                <div class="form-group full-width">
+                    <label for="nome">Nome Completo *</label>
+                    <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="matricula">Matrícula *</label>
+                    <input type="text" id="matricula" name="matricula" placeholder="000.000-0" required>
+                </div>
+                <div class="form-group">
+                    <label for="vinculo">Vínculo *</label>
+                    <select id="vinculo" name="vinculo" required>
+                        <option value="" disabled selected>Selecione seu vínculo</option>
+                        <option value="Funfarme">Funfarme</option>
+                        <option value="Prefeitura">Prefeitura</option>
+                        <option value="Estadual">Estadual</option>
+                        <option value="Federal">Federal</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="cargo">Cargo *</label>
+                    <select id="cargo" name="cargo" required>
+                        <option value="" disabled selected>Selecione seu cargo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="admissao">Data de Admissão *</label>
+                    <input type="date" id="admissao" name="admissao" required>
+                </div>
+            </div>
+
+            <div class="grid-row">
+                <div class="form-group">
+                    <label for="email">E-mail Corporativo/Pessoal *</label>
+                    <input type="email" id="email" name="email" placeholder="exemplo@riopreto.sp.gov.br" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefone">Telefone de Contato *</label>
+                    <input type="tel" id="telefone" name="telefone" placeholder="(17) 00000-0000" required>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-title">
+                <span>2</span>
+                <h2>Lotação de Interesse (Por Prioridade)</h2>
+            </div>
+        
+            <div class="grid-row">
+                <div class="form-group full-width">
+                    <label for="unidade_atual">Unidade de Lotação Atual *</label>
+                    <select id="unidade_atual" name="unidade_atual" class="select-unidade" required>
+                        <option value="" disabled selected>Selecione sua unidade atual</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="prioridades-container">
+                <div class="form-group">
+                    <label>1ª Opção (Obrigatória) *</label>
+                    <select name="opcao1" id="opcao1" class="select-unidade" required>
+                        <option value="" disabled selected>Selecione a 1ª opção</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>2ª Opção</label>
+                    <select name="opcao2" id="opcao2" class="select-unidade">
+                        <option value="" selected>Nenhuma (Opcional)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>3ª Opção</label>
+                    <select name="opcao3" id="opcao3" class="select-unidade">
+                        <option value="" selected>Nenhuma (Opcional)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>4ª Opção</label>
+                    <select name="opcao4" id="opcao4" class="select-unidade">
+                        <option value="" selected>Nenhuma (Opcional)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>5ª Opção</label>
+                    <select name="opcao5" id="opcao5" class="select-unidade">
+                        <option value="" selected>Nenhuma (Opcional)</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="section-title">
+                <span>3</span>
+                <h2>Documentação</h2>
+            </div>
+            <div class="upload-container">
+                <label for="curriculo" class="upload-label">
+                    <strong>Anexar Currículo Atualizado</strong>
+                    <span>Formatos aceitos: PDF, JPG, PNG, DOCX (Máx 5MB)</span>
+                </label>
+                <input type="file" id="curriculo" name="curriculo" accept=".pdf,.jpg,.png,.docx">
+            </div>
+        </section>
+
+        <footer class="form-footer">
+            <button type="submit" class="btn-submit">Enviar Solicitação</button>
+            <p class="copyright">&copy; 2026 Portal Secretaria de Saúde - Rio Preto</p>
+        </footer>
+    </form>
+</div>
+
+<script src="js/formulario.js"></script>
+</body>
+</html>
