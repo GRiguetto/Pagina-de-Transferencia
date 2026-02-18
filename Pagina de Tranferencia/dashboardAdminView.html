@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard do Servidor - SMS Rio Preto</title>
     <link rel="stylesheet" href="css/formulario.css">
-    <link rel="stylesheet" href="css/dashboardUserView.css">
+    <link rel="stylesheet" href="css/dashboardAdminView.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -22,6 +22,7 @@
             <a href="#" class="menu-item active" data-target="inicio">Início</a>
             <a href="#" class="menu-item" data-target="perfil">Meu Perfil</a>
             <a href="#" class="menu-item" data-target="faq">Dúvidas Frequentes</a>
+            <a href="#" class="menu-item" data-target="admin-pedidos">Gerenciar Pedidos</a>
             <a href="index.html" class="menu-item logout">Sair</a>
         </nav>
     </aside>
@@ -61,7 +62,7 @@
                         <li>Após transferido, permanência mínima de <strong>01 ano</strong> na nova unidade.</li>
                         <li>Transferências de Ofício ocorrem por interesse da Administração.</li>
                     </ul>
-                    <a href="img/portaria.pdf" target="_blank" class="link-documento">Ler Portaria Completa (PDF)</a>
+                    <a href="portaria.pdf" target="_blank" class="link-documento">Ler Portaria Completa (PDF)</a>
                 </div>
             </div>
         </section>
@@ -175,9 +176,150 @@
                 </div>
             </div>
         </section>
+
+        <section id="admin-pedidos" class="content-section">
+            <header class="section-header">
+                <div class="header-title">
+                    <h1>Relatório de Pedidos de Transferências Deferidas</h1>
+                    <p class="subtitle">Consulta técnica e exportação do banco de dados de movimentações aprovadas</p>
+                </div>
+                <div class="header-actions">
+                    <div class="export-group">
+                        <button class="btn-action btn-excel" onclick="exportarRelatorio('xlsx')">Excel</button>
+                        <button class="btn-action btn-csv" onclick="exportarRelatorio('csv')">CSV</button>
+                    </div>
+                </div>
+            </header>
+        
+            <div class="card table-toolbar">
+                <div class="card table-toolbar">
+                    <div class="search-container">
+                        <label class="filter-label">Busca Rápida:</label>
+                        <input type="text" id="dbSearch" placeholder="Nome, e-mail, matrícula ou unidade..." onkeyup="debounceSearch()">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <label>Vínculo:</label>
+                            <select id="filterVinculo" onchange="aplicarFiltros()">
+                                <option value="todos">Todos os Vínculos</option>
+                                <option value="Funfarme">Funfarme</option>
+                                <option value="Prefeitura">Prefeitura</option>
+                                <option value="Estadual">Estadual</option>
+                                <option value="Federal">Federal</option>
+                            </select>
+                        </div>
+                
+                        <div class="filter-item">
+                            <label>Cargo:</label>
+                            <select id="filterCargo" onchange="aplicarFiltros()">
+                                <option value="todos">Todos os Cargos</option>
+                                </select>
+                        </div>
+                
+                        <div class="filter-item">
+                            <label>Unidade Atual:</label>
+                            <select id="filterUnidade" onchange="aplicarFiltros()">
+                                <option value="todos">Todas as Unidades</option>
+                                </select>
+                        </div>
+
+                        <div class="filter-item">
+                            <label>Local de Interesse:</label>
+                            <select id="filterInteresse" onchange="aplicarFiltros()">
+                                <option value="todos">Todos os Locais</option>
+                                </select>
+                        </div>
+                
+                        <div class="filter-item">
+                            <label>Período do Pedido:</label>
+                            <div class="date-range">
+                                <input type="date" id="filterDateStart" onchange="aplicarFiltros()" title="Data Inicial">
+                                <input type="date" id="filterDateEnd" onchange="aplicarFiltros()" title="Data Final">
+                            </div>
+                        </div>
+                
+                        <div class="filter-item highlight">
+                            <label>Ordenar Por:</label>
+                            <select id="orderData" onchange="aplicarFiltros()">
+                                <option value="recente">Mais Novos primeiro</option>
+                                <option value="antigo">Mais Antigos primeiro</option>
+                                <option value="nomeAZ">Nome (A-Z)</option>
+                                <option value="nomeZA">Nome (Z-A)</option>
+                                <option value="matricula">Matrícula (Crescente)</option>
+                            </select>
+                        </div>
+                
+                        <div class="filter-item">
+                            <label>&nbsp;</label>
+                            <button class="btn-clear-filters" onclick="limparFiltros()" title="Resetar todos os filtros">
+                                Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="card database-wrapper">
+                <div class="table-info-bar">
+                    <div class="selection-info">
+                        <span id="rowCount">0</span> registros encontrados
+                    </div>
+                    <div class="bulk-actions" id="bulkActions" style="display: none;">
+                        <button class="btn-bulk-delete" onclick="massaExcluir()">Excluir Selecionados</button>
+                    </div>
+                </div>
+        
+                <div class="table-responsive">
+                    <table class="db-table" id="deferidosTable">
+                        <thead>
+                            <tr>
+                                <th class="col-check">
+                                    <input type="checkbox" id="selectAll" onclick="toggleSelectAll()">
+                                </th>
+                                <th>Nome Completo</th>
+                                <th>E-mail</th>
+                                <th>Matrícula</th>
+                                <th>Vínculo</th>
+                                <th>Cargo Atual</th>
+                                <th>Local de Trabalho Atual</th>
+                                <th>Prioridade 1</th>
+                                <th>Prioridade 2</th>
+                                <th>Prioridade 3</th>
+                                <th>Prioridade 4</th>
+                                <th>Prioridade 5</th>
+                                <th>Data Pedido</th>
+                                <th>Data Edição</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dbContent"></tbody>
+                    </table>
+                </div>
+        
+                <div class="table-footer">
+                    <div class="rows-per-page">
+                        Mostrar: 
+                        <select id="pageSize" onchange="mudarTamanhoPagina()">
+                            <option value="15">15</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <div class="pagination-controls">
+                        <span id="pageInfo">Página 1 de 1</span>
+                        <div class="pagination-btns">
+                            <button class="btn-nav" id="prevPage" onclick="paginaAnterior()">&laquo;</button>
+                            <div id="pageNumbers"></div>
+                            <button class="btn-nav" id="nextPage" onclick="proximaPagina()">&raquo;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 </div>
 
-<script src="js/dashboardUserView.js"></script>
+<script src="js/dashboardAdminView.js"></script>
 </body>
 </html>
