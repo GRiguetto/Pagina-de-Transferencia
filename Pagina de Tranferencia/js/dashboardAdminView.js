@@ -136,7 +136,8 @@ let bancoDeDados = [
         opcao2: "UBS CENTRAL",
         opcao3: "UBS ESTORIL",
         opcao4: "Nenhuma",
-        opcao5: "Nenhuma"
+        opcao5: "Nenhuma",
+        status:"Deferido"
     },
     {
         id: 2,
@@ -151,7 +152,9 @@ let bancoDeDados = [
         opcao2: "Nenhuma",
         opcao3: "Nenhuma",
         opcao4: "Nenhuma",
-        opcao5: "Nenhuma"
+        opcao5: "Nenhuma",
+        status:"Deferido"
+
     },
     {
         id: 3,
@@ -166,7 +169,8 @@ let bancoDeDados = [
         opcao2: "UPA SANTO ANTÔNIO",
         opcao3: "UPA TANGARÁ/ESTORIL",
         opcao4: "PRONTO SOCORRO - PS VILA TONINHO",
-        opcao5: "UBS SOLO SAGRADO"
+        opcao5: "UBS SOLO SAGRADO",
+        status:"Deferido "
     },
     {
         id: 4,
@@ -181,7 +185,8 @@ let bancoDeDados = [
         opcao2: "UBS LEALDADE E AMIZADE",
         opcao3: "Nenhuma",
         opcao4: "Nenhuma",
-        opcao5: "Nenhuma"
+        opcao5: "Nenhuma",
+        status:"Indeferido"
     },
     {
         id: 5,
@@ -196,7 +201,8 @@ let bancoDeDados = [
         opcao2: "UBS CENTRAL",
         opcao3: "UBS ELDORADO",
         opcao4: "Nenhuma",
-        opcao5: "Nenhuma"
+        opcao5: "Nenhuma",
+        status:"Em Análise"
     },
     {
         id: 6,
@@ -450,7 +456,12 @@ function renderizarTabela() {
 
         tr.innerHTML = `
             <td><input type="checkbox" class="row-check" ${itensSelecionados.has(item.id) ? 'checked' : ''} onclick="selecionarLinha(event, ${item.id})"></td>
-            <td>${item.nome}</td>
+            <td>
+                ${item.nome} 
+                <span class="badge badge-${item.status}" style="font-size: 0.6rem; margin-left: 5px;">
+                    ${item.status}
+                </span>
+            </td>
             <td>${item.email}</td>
             <td>${item.matricula}</td>
             <td>${item.vinculo}</td>
@@ -479,47 +490,39 @@ function debounceSearch() {
 }
 
 function aplicarFiltros() {
-    // 1. Captura dos elementos de entrada do DOM
+    // 1. Captura de todos os inputs
     const termo = document.getElementById('dbSearch').value.toLowerCase();
     const vinculo = document.getElementById('filterVinculo').value;
     const cargo = document.getElementById('filterCargo').value;
     const unidade = document.getElementById('filterUnidade').value;
     const interesse = document.getElementById('filterInteresse').value;
+    const status = document.getElementById('filterStatus').value; // Novo capturador
     const dataInicio = document.getElementById('filterDateStart').value;
     const dataFim = document.getElementById('filterDateEnd').value;
     const ordem = document.getElementById('orderData').value;
 
-    // 2. Execução da filtragem no Banco de Dados
+    // 2. Filtragem
     dadosFiltrados = bancoDeDados.filter(item => {
-        // Busca global: verifica nome, matrícula, unidade ou e-mail
-        const matchesSearch = 
-            item.nome.toLowerCase().includes(termo) || 
-            item.matricula.includes(termo) ||
-            item.unidade.toLowerCase().includes(termo) ||
-            item.email.toLowerCase().includes(termo);
+        const matchesSearch = item.nome.toLowerCase().includes(termo) || 
+                              item.matricula.includes(termo);
         
-        // Filtros de Categoria (Vínculo, Cargo e Unidade Atual)
         const matchesVinculo = vinculo === 'todos' || item.vinculo === vinculo;
         const matchesCargo = cargo === 'todos' || item.cargo === cargo;
         const matchesUnidade = unidade === 'todos' || item.unidade === unidade;
+        const matchesStatus = status === 'todos' || item.status === status; // Lógica do status
         
-        // Filtro de Local de Interesse: Varre as 5 prioridades do pedido
-        const prioridades = [item.opcao1, item.opcao2, item.opcao3, item.opcao4, item.opcao5];
-        const matchesInteresse = interesse === 'todos' || prioridades.includes(interesse);
-        
-        // Filtro por Período de Data
+        const matchesInteresse = interesse === 'todos' || 
+            [item.opcao1, item.opcao2, item.opcao3, item.opcao4, item.opcao5].includes(interesse);
+
         const matchesData = (!dataInicio || item.data >= dataInicio) && 
                             (!dataFim || item.data <= dataFim);
 
-        // Retorna verdadeiro apenas se passar em todos os critérios simultaneamente
         return matchesSearch && matchesVinculo && matchesCargo && 
-               matchesUnidade && matchesInteresse && matchesData;
+               matchesUnidade && matchesStatus && matchesInteresse && matchesData;
     });
 
-    // 3. Motor de Ordenação Inteligente
+    // 3. Ordenação (Mantendo a lógica de prioridade por interesse)
     dadosFiltrados.sort((a, b) => {
-        // Se houver um local de interesse específico selecionado,
-        // a prioridade máxima é o nível da opção (1ª, 2ª, 3ª...)
         if (interesse !== 'todos') {
             const nivelPrioridade = (item) => {
                 if (item.opcao1 === interesse) return 1;
@@ -527,34 +530,23 @@ function aplicarFiltros() {
                 if (item.opcao3 === interesse) return 3;
                 if (item.opcao4 === interesse) return 4;
                 if (item.opcao5 === interesse) return 5;
-                return 99; // Caso o item não tenha o local (não deve ocorrer devido ao filtro)
+                return 99;
             };
-
             const pA = nivelPrioridade(a);
             const pB = nivelPrioridade(b);
-
-            // Se os níveis forem diferentes, ordena pelo menor (1 é melhor que 2)
             if (pA !== pB) return pA - pB;
         }
 
-        // Critérios de Ordenação Adicionais (ou padrão se não houver filtro de interesse)
         switch (ordem) {
-            case 'recente':
-                return new Date(b.data) - new Date(a.data);
-            case 'antigo':
-                return new Date(a.data) - new Date(b.data);
-            case 'nomeAZ':
-                return a.nome.localeCompare(b.nome);
-            case 'nomeZA':
-                return b.nome.localeCompare(a.nome);
-            case 'matricula':
-                return a.matricula.localeCompare(b.matricula);
-            default:
-                return 0;
+            case 'recente': return new Date(b.data) - new Date(a.data);
+            case 'antigo': return new Date(a.data) - new Date(b.data);
+            case 'nomeAZ': return a.nome.localeCompare(b.nome);
+            case 'nomeZA': return b.nome.localeCompare(a.nome);
+            case 'matricula': return a.matricula.localeCompare(b.matricula);
+            default: return 0;
         }
     });
 
-    // 4. Renderização final da tabela e atualização dos contadores
     renderizarTabela();
 }
 
@@ -671,5 +663,37 @@ function formatarStatus(status) {
     return labels[status] || status;
 }
 
+function popularFiltrosDinamicos() {
+    const selCargo = document.getElementById('filterCargo');
+    const selUnidade = document.getElementById('filterUnidade');
+    const selInteresse = document.getElementById('filterInteresse');
 
+    // Função auxiliar interna para preencher cada select
+    const preencher = (selectElement, dados) => {
+        if (!selectElement) return;
+        const ordenados = [...new Set(dados)].sort(); // Remove duplicatas e ordena A-Z
+        ordenados.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item;
+            opt.textContent = item;
+            selectElement.appendChild(opt);
+        });
+    };
 
+    preencher(selCargo, cargosRaw);
+    preencher(selUnidade, locaisRaw);
+    preencher(selInteresse, locaisRaw);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Popula os menus de filtro com as constantes do topo do arquivo
+    popularFiltrosDinamicos();
+
+    // 2. Renderiza a tabela com os 20 pedidos iniciais
+    renderizarTabela();
+
+    // 3. Inicializa os contadores de registros
+    document.getElementById('rowCount').innerText = bancoDeDados.length;
+
+    // ... restante da sua lógica de menu/sidebar ...
+});

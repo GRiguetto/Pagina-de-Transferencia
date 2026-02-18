@@ -26,6 +26,7 @@
             <a href="index.html" class="menu-item logout">Sair</a>
         </nav>
     </aside>
+    
 
     <main class="main-content">
         
@@ -199,6 +200,17 @@
                     </div>
                     
                     <div class="filter-group">
+
+                        <div class="filter-item">
+                            <label>Status do Pedido:</label>
+                            <select id="filterStatus" onchange="aplicarFiltros()">
+                                <option value="todos">Todos os Status</option>
+                                <option value="deferido">Deferido</option>
+                                <option value="indeferido">Indeferido</option>
+                                <option value="analise">Em Análise</option>
+                            </select>
+                        </div>
+
                         <div class="filter-item">
                             <label>Vínculo:</label>
                             <select id="filterVinculo" onchange="aplicarFiltros()">
