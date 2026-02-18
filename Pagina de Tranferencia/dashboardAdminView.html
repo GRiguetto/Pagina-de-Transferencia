@@ -23,6 +23,7 @@
             <a href="#" class="menu-item" data-target="perfil">Meu Perfil</a>
             <a href="#" class="menu-item" data-target="faq">Dúvidas Frequentes</a>
             <a href="#" class="menu-item" data-target="admin-pedidos">Gerenciar Pedidos</a>
+            <a href="#" class="menu-item" data-target="analise-pedidos">Analisar Pedidos</a>
             <a href="index.html" class="menu-item logout">Sair</a>
         </nav>
     </aside>
@@ -328,6 +329,42 @@
                 </div>
             </div>
         </section>
+
+        <section id="analise-pedidos" class="content-section">
+            <header class="section-header">
+                <div class="header-title">
+                    <h1>Fila de Análise</h1>
+                    <p class="subtitle">Avaliação individual de solicitações de transferência</p>
+                </div>
+            </header>
+        
+            <div id="cardsContainer" class="dashboard-grid">
+                </div>
+        </section>
+        
+        <div id="modalDetalhes" class="modal-overlay" style="display: none;">
+            <div class="modal-card">
+                <header class="modal-header">
+                    <h2>Detalhes da Solicitação</h2>
+                    <button class="btn-close" onclick="fecharModal()">&times;</button>
+                </header>
+                
+                <div id="modalBody" class="modal-body">
+                    </div>
+        
+                <div class="modal-footer">
+                    <div class="justificativa-area">
+                        <label for="justificativa">Justificativa (Opcional):</label>
+                        <textarea id="justificativa" placeholder="Digite o motivo da decisão..."></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-status btn-analise" onclick="atualizarStatus('Em Análise')">Manter em Análise</button>
+                        <button class="btn-status btn-indeferir" onclick="atualizarStatus('Indeferido')">Indeferir</button>
+                        <button class="btn-status btn-deferir" onclick="atualizarStatus('Deferido')">Deferir Pedido</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </main>
 </div>

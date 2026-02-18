@@ -880,3 +880,104 @@ body {
     }
 }
 
+
+
+/*================================ Analise de Pedidos ===============================================*/
+
+/* Cards de Análise */
+.card-pedido {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-pedido .info-principal { margin-bottom: 15px; }
+.card-pedido .nome { font-weight: 700; color: var(--primary-blue); font-size: 1.1rem; }
+.card-pedido .cargo-tag { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2000; padding: 20px;
+}
+
+.modal-card {
+    background: white; width: 100%; max-width: 800px;
+    border-radius: 15px; max-height: 90vh; overflow-y: auto;
+}
+
+.modal-header { padding: 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; }
+.modal-body { padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.modal-footer { padding: 20px; background: #f8fafc; border-radius: 0 0 15px 15px; }
+.justificativa-area textarea { width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 10px; resize: none; }
+
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+.btn-status { padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; }
+.btn-deferir { background: var(--success); color: white; }
+.btn-indeferir { background: #dc3545; color: white; }
+.btn-analise { background: var(--warning-bg); color: var(--warning-text); }
+
+/* --- ESTILOS DO BOTÃO DE FECHAR (X) --- */
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-muted); /* Utiliza a cor definida no root */
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s ease;
+    padding: 5px;
+}
+
+.btn-close:hover {
+    color: #dc3545; /* Cor de destaque para indicar ação de fechar/cancelar */
+}
+
+/* --- ESTILOS DO LINK DE CURRÍCULO --- */
+.link-documento {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--secondary-blue); /* Utiliza o Azul Royal do seu projeto */
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 15px;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color); /* Borda padrão do projeto */
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.link-documento:hover {
+    background-color: #f0f7ff;
+    text-decoration: underline;
+}
+
+/* --- AJUSTES DE ESPAÇAMENTO NO MODAL --- */
+.info-group {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #edf2f7;
+}
+
+.info-group p {
+    margin: 8px 0;
+    font-size: 0.95rem;
+    color: var(--text-dark); /* Cor de texto principal */
+}
+
+.info-group ol {
+    margin-left: 20px;
+    color: var(--text-muted);
+}
+
+.info-group ol li {
+    margin-bottom: 5px;
+}

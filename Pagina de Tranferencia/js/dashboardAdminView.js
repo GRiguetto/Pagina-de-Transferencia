@@ -697,3 +697,95 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ... restante da sua lógica de menu/sidebar ...
 });
+
+// ==================================Analise de pedidos==============================================
+
+let pedidoSelecionadoId = null;
+
+function renderizarCardsAnalise() {
+    const container = document.getElementById('cardsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+
+    bancoDeDados.forEach(pedido => {
+        const card = document.createElement('div');
+        card.className = 'card card-pedido';
+        card.innerHTML = `
+            <div class="info-principal">
+                <div class="cargo-tag">${pedido.cargo}</div>
+                <div class="nome">${pedido.nome}</div>
+                <p><strong>Unidade Atual:</strong> ${pedido.unidade}</p>
+                <p><strong>1ª Opção:</strong> ${pedido.opcao1}</p>
+            </div>
+            <div class="status-badge ${pedido.status?.toLowerCase().replace(' ', '-') || 'em-analise'}">
+                ${pedido.status || 'Em Análise'}
+            </div>
+            <button class="btn-primary" onclick="abrirDetalhes(${pedido.id})" style="width: 100%; margin-top: 15px;">
+                Analisar Detalhes
+            </button>
+        `;
+        container.appendChild(card);
+    });
+}
+
+function abrirDetalhes(id) {
+    const pedido = bancoDeDados.find(p => p.id === id);
+    pedidoSelecionadoId = id;
+    const body = document.getElementById('modalBody');
+    
+    body.innerHTML = `
+        <div class="info-group">
+            <h4 class="form-section-title">Dados do Servidor</h4>
+            <p><strong>Matrícula:</strong> ${pedido.matricula}</p>
+            <p><strong>Vínculo:</strong> ${pedido.vinculo}</p>
+            <p><strong>E-mail:</strong> ${pedido.email}</p>
+            <p><strong>Admissão:</strong> ${pedido.data}</p>
+        </div>
+        <div class="info-group">
+            <h4 class="form-section-title">Prioridades Solicitadas</h4>
+            <ol>
+                <li>${pedido.opcao1}</li>
+                <li>${pedido.opcao2 || '-'}</li>
+                <li>${pedido.opcao3 || '-'}</li>
+                <li>${pedido.opcao4 || '-'}</li>
+                <li>${pedido.opcao5 || '-'}</li>
+            </ol>
+            <a href="#" class="link-documento">📄 Visualizar Currículo Anexado</a>
+        </div>
+    `;
+    
+    document.getElementById('modalDetalhes').style.display = 'flex';
+}
+
+function fecharModal() {
+    document.getElementById('modalDetalhes').style.display = 'none';
+    document.getElementById('justificativa').value = '';
+}
+
+function atualizarStatus(novoStatus) {
+    const index = bancoDeDados.findIndex(p => p.id === pedidoSelecionadoId);
+    if (index !== -1) {
+        bancoDeDados[index].status = novoStatus;
+        bancoDeDados[index].edicao = new Date().toLocaleDateString('pt-BR');
+        
+        const justificativa = document.getElementById('justificativa').value;
+        console.log(`Pedido ${pedidoSelecionadoId} atualizado para ${novoStatus}. Justificativa: ${justificativa}`);
+        
+        alert(`Pedido atualizado para ${novoStatus} com sucesso!`);
+        fecharModal();
+        renderizarCardsAnalise(); // Atualiza a fila de cards
+        renderizarTabela(); // Atualiza a tabela técnica se estiver visível
+    }
+}
+
+// Inicializar na carga da página
+document.addEventListener('DOMContentLoaded', () => {
+    renderizarCardsAnalise();
+    
+    // Adicionar listener no menu para carregar os cards quando a aba for clicada
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', () => {
+            if(item.getAttribute('data-target') === 'analise-pedidos') renderizarCardsAnalise();
+        });
+    });
+});
