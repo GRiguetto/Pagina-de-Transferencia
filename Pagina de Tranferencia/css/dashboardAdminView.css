@@ -304,33 +304,6 @@ body {
     transform: translateY(0);
 }
 
-/* Ajuste Responsivo para o Cabeçalho */
-@media (max-width: 600px) {
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .section-header .btn-primary {
-        width: 100%;
-        justify-content: center;
-        margin-top: 10px;
-    }
-}
-
-/* --- RESPONSIVIDADE --- */
-@media (max-width: 1024px) {
-    .sidebar { width: 80px; padding: 15px 10px; }
-    .sidebar span, .brand-area span { display: none; }
-  
-    .main-content { margin-left: 80px; }
-}
-
-@media (max-width: 768px) {
-    .main-content { padding: 20px; }
-    .dashboard-grid { grid-template-columns: 1fr; }
-}
-
 /* Botão Menu Sanduíche (Oculto por padrão) */
 .mobile-menu-toggle {
     display: none;
@@ -358,43 +331,6 @@ body {
 
 
 
-/* Responsividade para Tablets e Celulares */
-@media (max-width: 992px) {
-    .mobile-menu-toggle {
-        display: flex; /* Exibe o botão em telas menores */
-    }
-
-    .sidebar {
-        left: -100%; /* Esconde a sidebar para fora da tela */
-        transition: all 0.4s ease;
-        width: 260px; /* Mantém a largura real no mobile */
-    }
-
-    .sidebar.active {
-        left: 0; /* Desliza para dentro quando ativo */
-    }
-
-    .main-content {
-        margin-left: 0; /* Ocupa a tela toda */
-        padding: 60px 20px 20px 20px; /* Espaço para o botão fixo */
-    }
-
-    /* Overlay para escurecer o fundo quando o menu abrir */
-    .sidebar-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        z-index: 999;
-    }
-
-    .sidebar-overlay.active {
-        display: block;
-    }
-}
 
 /* --- CONTAINER E HEADER --- */
 #admin-pedidos {
@@ -755,12 +691,7 @@ body {
     align-items: flex-end;
 }
 
-/* Quando a tela for realmente grande (Desktop), usamos 5 colunas */
-@media (min-width: 1400px) {
-    .filter-group {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
+
 
 /* Ajuste específico para o campo de Busca para ele não ficar "preso" */
 .search-container {
@@ -857,28 +788,6 @@ body {
     color: #0f172a;
 }
 
-/* Responsividade */
-@media (max-width: 1100px) {
-    .filter-group {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 600px) {
-    .filter-group {
-        grid-template-columns: 1fr;
-    }
-    .date-range {
-        flex-direction: column;
-    }
-}
-
-/* --- RESPONSIVIDADE --- */
-@media (max-width: 768px) {
-    .main-content {
-        padding: 15px;
-    }
-}
 
 
 
@@ -980,4 +889,614 @@ body {
 
 .info-group ol li {
     margin-bottom: 5px;
+}
+
+.btn-primary{
+    background-color: #f1f5f9;
+    color: #64748b;
+    padding: 11px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover{
+    background-color: var(--secondary-blue);
+    transform: translateY(-1px);
+}
+
+
+/* ===== MENU SANDUÍCHE ===== */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1100;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    outline: none;
+}
+
+.mobile-menu-toggle span {
+    width: 100%;
+    height: 3px;
+    background: var(--primary-blue);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+/* Animação do ícone quando aberto */
+.mobile-menu-toggle.open span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+    background: var(--primary-blue);
+}
+
+.mobile-menu-toggle.open span:nth-child(2) {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.mobile-menu-toggle.open span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+    background: var(--primary-blue);
+}
+
+/* Overlay para fechar o menu */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+/* Telas médias (1024px - primeiros ajustes) */
+@media screen and (max-width: 1200px) {
+    .filter-group {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    .main-content {
+        padding: 30px;
+        max-width: 100%;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .main-content {
+        padding: 30px 25px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .export-group {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .btn-action {
+        flex: 1;
+        justify-content: center;
+    }
+    
+    .modal-body {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+}
+
+/* Ativação do menu sanduíche - tablet */
+@media screen and (max-width: 900px) {
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 80px 25px 30px 25px;
+        width: 100%;
+    }
+
+    .filter-group {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .table-toolbar {
+        padding: 20px !important;
+    }
+    
+    .date-range {
+        flex-direction: row;
+    }
+    
+    .date-range input {
+        width: 50%;
+    }
+}
+
+/* Telas pequenas - celular */
+@media screen and (max-width: 768px) {
+    .main-content {
+        padding: 70px 20px 25px 20px;
+    }
+
+    .mobile-menu-toggle {
+        top: 15px;
+        left: 15px;
+    }
+
+    .section-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .header-title .subtitle {
+        font-size: 0.85rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    /* Ajustes na barra de ferramentas */
+    .table-toolbar {
+        padding: 15px !important;
+    }
+
+    .search-container {
+        max-width: 100%;
+    }
+
+    .filter-item select,
+    .filter-item input[type="date"],
+    #dbSearch {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .btn-clear-filters {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    /* Ajustes na tabela */
+    .table-info-bar {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .db-table {
+        min-width: 1200px; /* Mantém scroll horizontal */
+    }
+
+    .db-table th,
+    .db-table td {
+        padding: 12px 15px;
+        font-size: 0.8rem;
+    }
+
+    /* Rodapé da tabela */
+    .table-footer {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .rows-per-page {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .rows-per-page select {
+        width: auto;
+        flex: 1;
+    }
+
+    .pagination-controls {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .pagination-btns {
+        margin-left: 0;
+        justify-content: center;
+        width: 100%;
+    }
+
+    /* Cards de análise */
+    .card-pedido {
+        padding: 20px;
+    }
+
+    .card-pedido .nome {
+        font-size: 1rem;
+    }
+
+    /* Modal */
+    .modal-card {
+        max-width: 95%;
+        margin: 10px;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-footer {
+        padding: 15px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+
+    .btn-status {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .justificativa-area textarea {
+        height: 60px;
+    }
+
+    /* Formulário de perfil */
+    .grid-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .form-actions {
+        text-align: center;
+    }
+
+    .btn-secondary {
+        width: 100%;
+    }
+
+    /* FAQ */
+    .faq-question {
+        padding: 15px;
+        font-size: 0.9rem;
+        text-align: left;
+    }
+
+    .faq-answer {
+        padding: 0 15px 15px 15px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Celulares muito pequenos */
+@media screen and (max-width: 480px) {
+    .main-content {
+        padding: 65px 15px 20px 15px;
+    }
+
+    .mobile-menu-toggle {
+        top: 12px;
+        left: 12px;
+        width: 28px;
+        height: 28px;
+    }
+    
+    .mobile-menu-toggle span {
+        height: 2.5px;
+    }
+    
+    .mobile-menu-toggle.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+    }
+
+    .mobile-menu-toggle.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .section-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .btn-action {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+    }
+
+    .badge {
+        padding: 3px 8px;
+        font-size: 0.7rem;
+    }
+
+    .opt-value {
+        padding: 3px 6px;
+        font-size: 0.7rem;
+    }
+
+    .table-info-bar {
+        font-size: 0.8rem;
+    }
+
+    .btn-nav {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    #pageNumbers button {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    .sidebar {
+        width: 85%;
+        max-width: 280px;
+        padding: 15px;
+    }
+
+    .logo-dashboard {
+        max-width: 70px;
+    }
+
+    .brand-area span {
+        font-size: 0.7rem;
+    }
+
+    .menu-item {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+
+    /* Modal para telas muito pequenas */
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .btn-close {
+        font-size: 1.3rem;
+    }
+
+    .info-group {
+        padding: 12px;
+    }
+
+    .info-group p {
+        font-size: 0.85rem;
+    }
+
+    .info-group ol {
+        font-size: 0.85rem;
+    }
+
+    .link-documento {
+        font-size: 0.85rem;
+        padding: 6px 10px;
+    }
+}
+
+/* Orientação landscape em celulares */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .sidebar {
+        overflow-y: auto;
+        padding: 15px;
+    }
+
+    .main-content {
+        padding-top: 60px;
+    }
+
+    .modal-card {
+        max-height: 85vh;
+    }
+
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+}
+
+/* Telas muito grandes */
+@media screen and (min-width: 1600px) {
+    .main-content {
+        max-width: 1600px;
+        margin: 0 auto;
+        margin-left: var(--sidebar-width);
+        padding: 40px 50px;
+    }
+
+    .filter-group {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 30px;
+    }
+
+    .card {
+        padding: 35px;
+    }
+
+    .section-header h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Ajustes para a seção de análise em telas médias */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    #cardsContainer.dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Melhorias na tabela responsiva */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+}
+
+.table-responsive:active {
+    cursor: grabbing;
+}
+
+/* Customização da scrollbar para a tabela */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-blue);
+}
+
+/* Ajustes para impressão */
+@media print {
+    .sidebar,
+    .mobile-menu-toggle,
+    .btn-action,
+    .btn-clear-filters,
+    .btn-status,
+    .btn-close,
+    .modal-actions,
+    .form-actions,
+    .pagination-controls,
+    .rows-per-page select,
+    .btn-nav {
+        display: none !important;
+    }
+
+    .main-content {
+        margin: 0;
+        padding: 20px;
+    }
+
+    .content-section {
+        display: block !important;
+    }
+
+    .db-table {
+        min-width: 100%;
+        border-collapse: collapse;
+    }
+
+    .db-table th,
+    .db-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .badge {
+        border: 1px solid #000;
+        background: none !important;
+        color: #000 !important;
+    }
+}
+
+/* Acessibilidade - foco visível */
+.mobile-menu-toggle:focus-visible,
+.btn-action:focus-visible,
+.btn-clear-filters:focus-visible,
+.btn-nav:focus-visible {
+    outline: 3px solid var(--secondary-blue);
+    outline-offset: 2px;
+}
+
+/* Suporte para telas com altura reduzida */
+@media screen and (max-height: 600px) {
+    .sidebar {
+        overflow-y: auto;
+    }
+
+    .brand-area {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .menu {
+        gap: 3px;
+    }
+
+    .menu-item {
+        padding: 8px 12px;
+    }
+
+    .modal-card {
+        max-height: 95vh;
+    }
+
+    .modal-body {
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+}
+
+/* Melhorias para telas com densidade de pixels alta */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .btn-action,
+    .btn-clear-filters,
+    .btn-nav {
+        border-width: 0.5px;
+    }
 }
