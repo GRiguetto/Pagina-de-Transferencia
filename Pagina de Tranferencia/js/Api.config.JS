@@ -1,155 +1,133 @@
 /**
  * ============================================================
  *  SMS RIO PRETO — CONFIGURAÇÃO CENTRAL DA API
- *  Arquivo: js/api.config.js
- *  Inclua este script em TODAS as páginas antes dos demais JS:
- *  <script src="js/api.config.js"></script>
+ *  Arquivo: js/Api.config.js
  * ============================================================
  */
+ const API = (() => {
 
- const API = {
-    // ── Troque pela URL real do seu servidor ──────────────────
-    BASE_URL: 'https://api.sms-riopreto.sp.gov.br/v1',
-    // BASE_URL: 'http://localhost:3000/v1',  // ← desenvolvimento local
+    const BASE_URL = 'http://127.0.0.1:5000';
 
-    // ── Endpoints ─────────────────────────────────────────────
-    ENDPOINTS: {
-        // Auth
+    const ENDPOINTS = {
         LOGIN:              '/auth/login',
-        LOGOUT:             '/auth/logout',
         REGISTER:           '/auth/register',
-        REFRESH_TOKEN:      '/auth/refresh',
+        REFRESH:            '/auth/refresh',
+        LOGOUT:             '/auth/logout',
 
-        // Servidor (usuário logado)
         PERFIL:             '/servidor/perfil',
-        PERFIL_UPDATE:      '/servidor/perfil',          // PATCH
-        CHANGE_PASSWORD:    '/servidor/senha',           // PATCH
-        SOLICITACAO_ATUAL:  '/servidor/solicitacao',     // GET
+        PERFIL_UPDATE:      '/servidor/perfil',
+        SOLICITACAO_ATUAL:  '/servidor/solicitacao',
+        HISTORICO_USUARIO:  '/servidor/historico',
 
-        // Solicitações
-        SOLICITACOES:       '/solicitacoes',             // GET (admin) / POST (user)
-        SOLICITACAO_BY_ID:  '/solicitacoes/:id',         // GET / DELETE
-        SOLICITACAO_STATUS: '/solicitacoes/:id/status',  // PATCH
+        SOLICITACOES:             '/solicitacoes',
+        SOLICITACAO_BY_ID:        '/solicitacoes/:id',
+        SOLICITACAO_EDITAR:       '/solicitacoes/:id',
+        SOLICITACAO_STATUS:       '/solicitacoes/:id/status',
+        HISTORICO_BY_USUARIO:     '/solicitacoes/historico-usuario/:id',
 
-        // Tabelas auxiliares (retornadas pelo back-end)
+        UPLOAD_CURRICULO:   '/upload/curriculo',
         CARGOS:             '/tabelas/cargos',
         UNIDADES:           '/tabelas/unidades',
-    },
+    };
 
-    // ── Tempo máximo por requisição (ms) ──────────────────────
-    TIMEOUT: 10000,
+    const getToken   = () => sessionStorage.getItem('sms_token');
+    const getRefresh = () => sessionStorage.getItem('sms_refresh_token');
 
-    // ── Helpers ───────────────────────────────────────────────
+    function setTokens(access, refresh) {
+        if (access)  sessionStorage.setItem('sms_token', access);
+        if (refresh) sessionStorage.setItem('sms_refresh_token', refresh);
+    }
 
-    /**
-     * Monta a URL completa, substituindo parâmetros de rota.
-     * Ex: API.url('/solicitacoes/:id', { id: 42 })  → '.../solicitacoes/42'
-     */
-    url(endpoint, params = {}) {
-        let path = endpoint;
-        for (const [key, val] of Object.entries(params)) {
-            path = path.replace(`:${key}`, encodeURIComponent(val));
-        }
-        return this.BASE_URL + path;
-    },
+    function clearSession() {
+        sessionStorage.removeItem('sms_token');
+        sessionStorage.removeItem('sms_refresh_token');
+        sessionStorage.removeItem('sms_usuario');
+    }
 
-    /**
-     * Headers padrão (adiciona Authorization se houver token no sessionStorage)
-     */
-    headers(extra = {}) {
-        const token = sessionStorage.getItem('sms_token');
+    function resolveUrl(endpoint, params = {}) {
+        let url = BASE_URL + endpoint;
+        Object.entries(params).forEach(([k, v]) => {
+            url = url.replace(`:${k}`, encodeURIComponent(v));
+        });
+        return url;
+    }
+
+    function headers(extra = {}) {
+        const token = getToken();
         return {
             'Content-Type': 'application/json',
             ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
             ...extra,
         };
-    },
+    }
 
-    /**
-     * Wrapper fetch com timeout, tratamento de erros e renovação de token.
-     * Retorna { ok, data, status, message }
-     */
-    async request(method, endpoint, body = null, routeParams = {}) {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), this.TIMEOUT);
+    async function request(method, endpoint, body = null, routeParams = {}) {
+        const url  = resolveUrl(endpoint, routeParams);
+        const opts = {
+            method,
+            headers: headers(),
+            signal:  AbortSignal.timeout(15000),
+        };
+        if (body && method !== 'GET') opts.body = JSON.stringify(body);
 
-        try {
-            const options = {
-                method,
-                headers: this.headers(),
-                signal: controller.signal,
-            };
-            if (body) options.body = JSON.stringify(body);
+        let res = await fetch(url, opts);
 
-            const res = await fetch(this.url(endpoint, routeParams), options);
-            clearTimeout(timer);
-
-            // Token expirado → tenta renovar uma vez
-            if (res.status === 401) {
-                const renewed = await this._renewToken();
-                if (renewed) return this.request(method, endpoint, body, routeParams);
-                this._redirectLogin();
-                return { ok: false, status: 401, message: 'Sessão expirada.' };
+        if (res.status === 401 && endpoint !== ENDPOINTS.LOGIN && endpoint !== ENDPOINTS.REFRESH) {
+            const rt = getRefresh();
+            if (rt) {
+                const rr = await fetch(BASE_URL + ENDPOINTS.REFRESH, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refresh_token: rt }),
+                });
+                if (rr.ok) {
+                    const { access_token } = await rr.json();
+                    setTokens(access_token, null);
+                    opts.headers = headers();
+                    res = await fetch(url, opts);
+                } else {
+                    clearSession();
+                    window.location.href = 'index.html';
+                    return { ok: false, status: 401, data: null, message: 'Sessão expirada.' };
+                }
+            } else {
+                clearSession();
+                window.location.href = 'index.html';
+                return { ok: false, status: 401, data: null, message: 'Sessão expirada.' };
             }
-
-            const data = res.headers.get('content-type')?.includes('application/json')
-                ? await res.json()
-                : await res.text();
-
-            return { ok: res.ok, status: res.status, data, message: data?.message || '' };
-
-        } catch (err) {
-            clearTimeout(timer);
-            if (err.name === 'AbortError') {
-                return { ok: false, status: 408, message: 'Tempo de resposta excedido. Tente novamente.' };
-            }
-            console.error('[API] Erro de rede:', err);
-            return { ok: false, status: 0, message: 'Sem conexão com o servidor.' };
         }
-    },
 
-    // Atalhos semânticos
-    get:    (ep, params)       => API.request('GET',    ep, null, params),
-    post:   (ep, body)         => API.request('POST',   ep, body),
-    patch:  (ep, body, params) => API.request('PATCH',  ep, body, params),
-    delete: (ep, params)       => API.request('DELETE', ep, null, params),
-
-    // ── Upload de arquivo (multipart) ─────────────────────────
-    async upload(endpoint, formData) {
-        const token = sessionStorage.getItem('sms_token');
-        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-        try {
-            const res = await fetch(this.BASE_URL + endpoint, {
-                method: 'POST',
-                headers, // SEM Content-Type: o browser define o boundary do multipart
-                body: formData,
-            });
-            const data = await res.json();
-            return { ok: res.ok, status: res.status, data };
-        } catch (err) {
-            return { ok: false, status: 0, message: 'Falha no upload.' };
+        let data = null;
+        const ct = res.headers.get('Content-Type') || '';
+        if (ct.includes('application/json')) {
+            try { data = await res.json(); } catch { data = null; }
         }
-    },
 
-    // ── Internos ──────────────────────────────────────────────
-    async _renewToken() {
-        const refresh = sessionStorage.getItem('sms_refresh_token');
-        if (!refresh) return false;
-        try {
-            const res = await fetch(this.BASE_URL + this.ENDPOINTS.REFRESH_TOKEN, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ refresh_token: refresh }),
-            });
-            if (!res.ok) return false;
-            const { access_token } = await res.json();
-            sessionStorage.setItem('sms_token', access_token);
-            return true;
-        } catch { return false; }
-    },
+        return { ok: res.ok, status: res.status, data, message: data?.message || '' };
+    }
 
-    _redirectLogin() {
-        sessionStorage.clear();
-        window.location.href = 'index.html';
-    },
-};
+    // Upload multipart
+    async function uploadFile(endpoint, formData) {
+        const token = getToken();
+        const res = await fetch(BASE_URL + endpoint, {
+            method:  'POST',
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+            body:    formData,
+            signal:  AbortSignal.timeout(30000),
+        });
+        let data = null;
+        try { data = await res.json(); } catch { data = null; }
+        return { ok: res.ok, status: res.status, data, message: data?.message || '' };
+    }
+
+    return {
+        BASE_URL, ENDPOINTS,
+        setTokens, clearSession,
+        get:    (ep, params = {})       => request('GET',    ep, null, params),
+        post:   (ep, body, params = {}) => request('POST',   ep, body, params),
+        patch:  (ep, body, params = {}) => request('PATCH',  ep, body, params),
+        delete: (ep, params = {})       => request('DELETE', ep, null, params),
+        upload: uploadFile,       // alias para retro-compatibilidade com formulario.js
+        uploadFile,               // nome oficial
+    };
+})();

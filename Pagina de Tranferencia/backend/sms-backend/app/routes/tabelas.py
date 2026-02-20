@@ -1,0 +1,66 @@
+from flask import Blueprint, jsonify
+
+tabelas_bp = Blueprint("tabelas", __name__)
+
+CARGOS = [
+    "ADMINISTRATIVO",
+    "ADVOGADO",
+    "AGENTE COMUNITARIO DE SAUDE",
+    "AGENTE DE ENDEMIAS",
+    "ASSISTENTE SOCIAL",
+    "AUXILIAR DE ENFERMAGEM",
+    "BIOMÉDICO",
+    "CIRURGIÃO DENTISTA",
+    "ENFERMEIRO",
+    "FARMACÊUTICO",
+    "FISIOTERAPEUTA",
+    "FONOAUDIÓLOGO",
+    "MÉDICO",
+    "NUTRICIONISTA",
+    "PSICÓLOGO",
+    "TÉCNICO DE ENFERMAGEM",
+    "TÉCNICO DE SAÚDE BUCAL",
+    "TERAPEUTA OCUPACIONAL",
+    "ANALISTA DE TI",
+    "MOTORISTA",
+    "VIGILANTE",
+]
+
+UNIDADES = [
+    "CAPS I NORTE",
+    "CAPS II LESTE",
+    "CAPS II OESTE",
+    "CAPS AD",
+    "CAPS INFANTIL",
+    "CENTRO DE ATENDIMENTO ESPECIALIZADO (CAE)",
+    "CENTRO DE ESPECIALIDADES MÉDICAS (CEM)",
+    "DEPARTAMENTO DE TECNOLOGIA E INFORMAÇÃO",
+    "DEPARTAMENTO DE VIGILÂNCIA EPIDEMIOLÓGICA",
+    "HOSPITAL DE BASE",
+    "PRONTO SOCORRO MUNICIPAL",
+    "SECRETARIA MUNICIPAL DE SAÚDE (SEDE)",
+    "UBS ANCHIETA",
+    "UBS BOA VISTA",
+    "UBS CENTRAL",
+    "UBS ESTORIL",
+    "UBS JAGUARÉ",
+    "UBS MORUMBI",
+    "UBS NOVA REDENTORA",
+    "UBS PINHEIRINHO",
+    "UBS SANTIN PEZZOTTI",
+    "UBS SOLO SAGRADO",
+    "UBS TALHADO",
+    "UBS UNIDADE BÁSICA DE SAÚDE - UBS CENTRAL",
+    "UNIDADE DE PRONTO ATENDIMENTO (UPA) NORTE",
+    "UNIDADE DE PRONTO ATENDIMENTO (UPA) SUL",
+]
+
+
+@tabelas_bp.route("/cargos", methods=["GET"])
+def get_cargos():
+    return jsonify(sorted(CARGOS)), 200
+
+
+@tabelas_bp.route("/unidades", methods=["GET"])
+def get_unidades():
+    return jsonify(sorted(UNIDADES)), 200
